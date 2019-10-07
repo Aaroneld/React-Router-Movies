@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, componentDidMount } from 'react';
+import {Link} from 'react-router-dom';
 import axios from 'axios';
+import Movie from './Movie';
 
 const MovieList = props => {
   const [movies, setMovies] = useState([])
@@ -9,6 +11,7 @@ const MovieList = props => {
         .get('http://localhost:5000/api/movies')
         .then(response => {
           setMovies(response.data);
+          console.log(response.data);
         })
         .catch(error => {
           console.error('Server Error', error);
@@ -20,32 +23,35 @@ const MovieList = props => {
   
   return (
     <div className="movie-list">
-      {movies.map(movie => (
-        <MovieDetails key={movie.id} movie={movie} />
-      ))}
-    </div>
+      <p>lol</p> 
+       {movies.length > 0 && movies.map(movie => (
+        <MovieDetails key={movie.id} movies={movie} />
+       ))}} 
+    </div> 
   );
 }
 
-function MovieDetails({ movie }) {
-  const { title, director, metascore, stars } = movie;
+function MovieDetails(props) {
+ // const { title, director, metascore, stars } = movie;
   return (
+    <Link to={`movies/${props.movies["id"]}`}>
     <div className="movie-card">
-      <h2>{title}</h2>
+      <h2>{props.movies["title"]}</h2>
       <div className="movie-director">
-        Director: <em>{director}</em>
+        Director: <em>{props.movies["director"]}</em>
       </div>
       <div className="movie-metascore">
-        Metascore: <strong>{metascore}</strong>
+        Metascore: <strong>{props.movies["metascore"]}</strong>
       </div>
       <h3>Actors</h3>
 
-      {stars.map(star => (
+      {props.movies["stars"].map(star => (
         <div key={star} className="movie-star">
           {star}
         </div>
       ))}
     </div>
+    </Link>
   );
 }
 
